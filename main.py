@@ -1,7 +1,8 @@
 import random
-import os
 from gtts import gTTS
+from moviepy.editor import ColorClip, AudioFileClip
 
+# موضوعات
 topics = [
     "یک ترفند مخفی آیفون",
     "یک قابلیت جالب واتساپ",
@@ -10,13 +11,25 @@ topics = [
 ]
 
 topic = random.choice(topics)
+
 script = f"امروز یاد میگیریم {topic}. برای آموزش‌های بیشتر کانال رو سابسکرایب کن!"
 
 # ساخت صدا
-tts = gTTS(script, lang='fa')
+tts = gTTS(text=script, lang='fa')
 tts.save("voice.mp3")
 
-# ساخت ویدیو با ffmpeg (پس‌زمینه مشکی 1080x1920 با 40fps)
-os.system(
-    "ffmpeg -f lavfi -i color=c=black:s=1080x1920:d=15 "
-    "-i 
+# ساخت ویدیو
+background = ColorClip(size=(1080, 1920), color=(20, 20, 20), duration=15)
+audio = AudioFileClip("voice.mp3")
+
+video = background.set_audio(audio)
+
+video.write_videofile(
+    "short.mp4",
+    fps=40,
+    codec="libx264",
+    audio_codec="aac",
+    bitrate="8000k"
+)
+
+print("✅ Video created successfully!")
