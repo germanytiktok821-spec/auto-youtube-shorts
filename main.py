@@ -1,13 +1,14 @@
+import os
+import random
 from gtts import gTTS
 from moviepy.editor import *
-import random
 
 # موضوعات آموزشی
 topics = [
     "یک ترفند مخفی آیفون",
     "یک قابلیت جالب واتساپ",
     "یک روش افزایش تمرکز",
-    "یک ترفند کاربردی کیبورد آیفون"
+    "یک ترفند کاربردی گوشی"
 ]
 
 topic = random.choice(topics)
@@ -18,9 +19,19 @@ script = f"امروز یاد میگیریم {topic}. برای آموزش‌ها�
 tts = gTTS(script, lang='fa')
 tts.save("voice.mp3")
 
-# ساخت ویدیو عمودی
-background = ColorClip(size=(1080,1920), color=(0,0,0), duration=15)
+# ساخت ویدیو عمودی 1080x1920
+background = ColorClip(size=(1080,1920), color=(15,15,15), duration=15)
+
 audio = AudioFileClip("voice.mp3")
 video = background.set_audio(audio)
 
-video.write_videofile("short.mp4", fps=24)
+# خروجی با کیفیت بالا و 40fps
+video.write_videofile(
+    "short.mp4",
+    fps=40,
+    codec="libx264",
+    audio_codec="aac",
+    bitrate="8000k"
+)
+
+print("Video created successfully!")
